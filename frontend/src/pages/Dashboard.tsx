@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Activity, Clock, Coins, Server, TrendingUp, Calendar } from 'lucide-react';
+import { Activity, Clock, Coins, Server, TrendingUp, Calendar, Info } from 'lucide-react';
 import api from '../api';
 
 interface Stats {
@@ -18,6 +19,7 @@ interface ChartPoint {
 }
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<Stats | null>(null);
   const [chartData, setChartData] = useState<ChartPoint[]>([]);
   const [chartPeriod, setChartPeriod] = useState<'weekly' | 'monthly'>('weekly');
@@ -64,11 +66,19 @@ const Dashboard: React.FC = () => {
     );
 
   const statCards = [
-    { title: 'Total Endpoints', value: stats.total_endpoints, icon: Server, gradient: 'from-blue-500 to-blue-600' },
-    { title: 'Panggilan API', value: stats.total_calls, icon: Activity, gradient: 'from-emerald-500 to-emerald-600' },
-    { title: 'Token Terpakai', value: stats.total_tokens.toLocaleString(), icon: Coins, gradient: 'from-amber-500 to-amber-600' },
-    { title: 'Rata-rata Waktu', value: `${stats.avg_response_time_ms.toFixed(0)} ms`, icon: Clock, gradient: 'from-purple-500 to-purple-600' },
-    { title: 'Estimasi Biaya', value: `$${stats.total_cost.toFixed(4)}`, icon: TrendingUp, gradient: 'from-rose-500 to-rose-600' },
+    { id: 'endpoints', title: 'Total Endpoints', value: stats.total_endpoints, icon: Server, gradient: 'from-blue-500 to-blue-600' },
+    { 
+      id: 'calls', 
+      title: 'Panggilan API', 
+      value: stats.total_calls, 
+      icon: Activity, 
+      gradient: 'from-emerald-500 to-emerald-600',
+      path: '/endpoints',
+      tooltip: 'Detail per API tersedia di menu Endpoints'
+    },
+    { id: 'tokens', title: 'Token Terpakai', value: stats.total_tokens.toLocaleString(), icon: Coins, gradient: 'from-amber-500 to-amber-600' },
+    { id: 'time', title: 'Rata-rata Waktu', value: `${stats.avg_response_time_ms.toFixed(0)} ms`, icon: Clock, gradient: 'from-purple-500 to-purple-600' },
+    { id: 'cost', title: 'Estimasi Biaya', value: `$${stats.total_cost.toFixed(4)}`, icon: TrendingUp, gradient: 'from-rose-500 to-rose-600' },
   ];
 
   return (
@@ -77,17 +87,32 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         {statCards.map((card) => {
           const Icon = card.icon;
+          const isClickable = !!card.path;
           return (
             <div
-              key={card.title}
-              className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow"
+              key={card.id || card.title}
+              onClick={() => isClickable && navigate(card.path!)}
+              className={`group relative bg-white rounded-xl shadow-sm border border-gray-100 p-5 transition-all duration-200 ${
+                isClickable ? 'cursor-pointer hover:shadow-md hover:border-[#6ed451]/30 active:scale-95' : 'hover:shadow-md'
+              }`}
             >
               <div className="flex items-center gap-4">
-                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center shadow-sm`}>
+                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform`}>
                   <Icon className="h-5 w-5 text-white" />
                 </div>
-                <div className="min-w-0">
-                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wider truncate">{card.title}</p>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-medium text-gray-400 uppercase tracking-wider truncate">{card.title}</p>
+                    {card.tooltip && (
+                      <div className="relative group/tooltip">
+                        <Info className="h-3 w-3 text-gray-300 hover:text-emerald-500 cursor-help" />
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-40 p-2 bg-gray-900 text-white text-[10px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50 text-center shadow-xl">
+                          {card.tooltip}
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-gray-900" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <h3 className="text-xl font-bold text-gray-900 mt-0.5">{card.value}</h3>
                 </div>
               </div>

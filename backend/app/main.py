@@ -52,8 +52,26 @@ async def create_endpoint(endpoint: APIEndpointCreate, db: AsyncSession = Depend
 
 @app.get("/admin/endpoints", response_model=list[APIEndpointResponse])
 async def list_endpoints(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(APIEndpoint))
-    return result.scalars().all()
+    # Query endpoints with call counts
+    query = (
+        select(
+            APIEndpoint,
+            func.count(APILog.id).label("call_count")
+        )
+        .outerjoin(APILog, APIEndpoint.id == APILog.endpoint_id)
+        .group_by(APIEndpoint.id)
+    )
+    result = await db.execute(query)
+    
+    endpoints = []
+    for row in result.all():
+        ep = row[0]
+        count = row[1]
+        # Attach the count dynamically for the schema
+        ep.call_count = count
+        endpoints.push(ep) if hasattr(endpoints, 'push') else endpoints.append(ep)
+        
+    return endpoints
 
 @app.delete("/admin/endpoints/{endpoint_id}")
 async def delete_endpoint(endpoint_id: int, db: AsyncSession = Depends(get_db)):

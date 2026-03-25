@@ -16,6 +16,7 @@ class APIEndpointResponse(BaseModel):
     prompt_template: str
     created_at: datetime
     updated_at: Optional[datetime] = None
+    call_count: int = 0
 
     class Config:
         from_attributes = True

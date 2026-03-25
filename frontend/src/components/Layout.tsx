@@ -44,11 +44,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               key={item.name}
               to={item.path}
               onClick={() => setSidebarOpen(false)}
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                active
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${active
                   ? 'bg-[#6ed451] text-[#002d72] shadow-md shadow-[#6ed451]/30'
                   : 'text-blue-200 hover:bg-white/10 hover:text-white'
-              }`}
+                }`}
             >
               <Icon className="w-5 h-5 flex-shrink-0" />
               {item.name}
@@ -81,9 +80,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       {/* Mobile Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 w-64 bg-[#002d72] z-50 transform transition-transform duration-300 lg:hidden ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 w-64 bg-[#002d72] z-50 transform transition-transform duration-300 lg:hidden ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <SidebarContent />
       </aside>
@@ -107,7 +105,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <div className="flex items-center gap-2">
               <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1.5 rounded-full">
                 <span className="w-2 h-2 rounded-full bg-[#6ed451] animate-pulse" />
-                Sistem Aktif
+                Fisan Syafa Nayoma
               </span>
             </div>
           </div>

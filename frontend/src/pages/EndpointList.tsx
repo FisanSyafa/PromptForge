@@ -11,6 +11,7 @@ interface Endpoint {
   model_name: string;
   prompt_template: string;
   created_at: string;
+  call_count: number;
 }
 
 const methodColors: Record<string, string> = {
@@ -127,6 +128,9 @@ Penghapusan ini juga akan menghapus log statistik terkait.`)) {
                     </div>
                     <div>
                       <h4 className="text-base font-bold text-gray-900">{ep.name}</h4>
+                      <p className="text-[10px] text-gray-400 font-medium uppercase tracking-tighter mt-0.5">
+                        Total Panggilan API : {ep.call_count || 0}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
