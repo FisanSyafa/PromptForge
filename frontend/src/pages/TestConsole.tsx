@@ -23,7 +23,7 @@ const extractVariables = (template: string): string[] => {
   return vars;
 };
 
-// Label map for user-friendly names
+// Label map
 const friendlyLabel: Record<string, string> = {
   text: 'Teks Input',
   language: 'Bahasa Tujuan',
