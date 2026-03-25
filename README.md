@@ -29,6 +29,11 @@ Buka terminal baru di folder `backend`:
     DATABASE_URL=postgresql+asyncpg://promptforge:berijalan@localhost:5433/promptforge_db
     GEMINI_API_KEY=YOUR_GEMINI_API_KEY
     OLLAMA_URL=http://localhost:11434
+
+    POSTGRES_USER=your_username
+    POSTGRES_PASSWORD=your_password
+    POSTGRES_DB=your_db
+    POSTGRES_PORT=your_port
     ```
 4.  **Jalankan Backend**:
     ```bash
